@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Guitar Chord Practice App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'primary': '#0ea5e9', // sky-500
+              'primary-focus': '#0284c7', // sky-600
+              'background': '#111827', // gray-900
+              'surface': '#1f2937', // gray-800
+              'text-primary': '#f9fafb', // gray-50
+              'text-secondary': '#9ca3af', // gray-400
+            },
+            animation: {
+              'pulse-beat': 'pulse-beat 0.5s ease-out',
+              'fade-in': 'fade-in 0.2s ease-out',
+            },
+            keyframes: {
+              'pulse-beat': {
+                '0%, 100%': { transform: 'scale(1)', opacity: '0.7' },
+                '50%': { transform: 'scale(1.15)', opacity: '1' },
+              },
+              'fade-in': {
+                '0%': { opacity: '0', transform: 'scale(0.95)' },
+                '100%': { opacity: '1', transform: 'scale(1)' },
+              },
+            }
+          }
+        }
+      }
+    </script>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://esm.sh/react-dom@^19.1.1/",
+    "react": "https://esm.sh/react@^19.1.1",
+    "react/": "https://esm.sh/react@^19.1.1/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-background text-text-primary">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>

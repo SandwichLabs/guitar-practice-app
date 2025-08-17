@@ -1,0 +1,5 @@
+{
+  "name": "Guitar Chord Practice App",
+  "description": "An application to help guitarists practice chord progressions. Input a BPM and a series of chords, then play along with a visual metronome, chord diagrams, and a karaoke-style progression display.",
+  "requestFramePermissions": []
+}
