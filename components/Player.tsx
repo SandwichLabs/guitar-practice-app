@@ -29,6 +29,10 @@ const Player: React.FC<PlayerProps> = ({ bpm, sections, onBack, repeat }) => {
     const stored = localStorage.getItem('guitarPracticeApp_metronomeEnabled');
     return stored ? JSON.parse(stored) : true;
   });
+  const [voiceEnabled, setVoiceEnabled] = useState<boolean>(() => {
+    const stored = localStorage.getItem('guitarPracticeApp_voiceEnabled');
+    return stored ? JSON.parse(stored) : true;
+  });
   const isFirstBeatRef = useRef(true);
 
   const onBeatCallback = useCallback((currentBeat: number) => {
@@ -71,7 +75,7 @@ const Player: React.FC<PlayerProps> = ({ bpm, sections, onBack, repeat }) => {
   }, [sections, repeat]);
 
   const { isPlaying, start, stop } = useMetronome(bpm, onBeatCallback);
-  const { playBeat, reset: resetSounds } = useMetronomeSounds({ enabled: metronomeEnabled, bpm });
+  const { playBeat, reset: resetSounds } = useMetronomeSounds({ enabled: metronomeEnabled, voiceEnabled, bpm });
   
   const isSongFinished = playerState.sectionIndex >= sections.length;
 
@@ -86,6 +90,11 @@ const Player: React.FC<PlayerProps> = ({ bpm, sections, onBack, repeat }) => {
   useEffect(() => {
     localStorage.setItem('guitarPracticeApp_metronomeEnabled', JSON.stringify(metronomeEnabled));
   }, [metronomeEnabled]);
+
+  // Save voice preference to localStorage
+  useEffect(() => {
+    localStorage.setItem('guitarPracticeApp_voiceEnabled', JSON.stringify(voiceEnabled));
+  }, [voiceEnabled]);
 
   useEffect(() => {
     if (isSongFinished && isPlaying) {
@@ -144,7 +153,7 @@ const Player: React.FC<PlayerProps> = ({ bpm, sections, onBack, repeat }) => {
         <button onClick={onBack} className="absolute top-0 left-0 text-text-secondary hover:text-primary transition-colors">&larr; Back to Setup</button>
         <div className="text-right">
           <div className="text-sm text-text-secondary mb-2">BPM: {bpm}</div>
-          <div className="flex items-center justify-end">
+          <div className="flex items-center justify-end mb-1">
             <input
               id="metronome-toggle"
               type="checkbox"
@@ -154,6 +163,18 @@ const Player: React.FC<PlayerProps> = ({ bpm, sections, onBack, repeat }) => {
             />
             <label htmlFor="metronome-toggle" className="ml-2 text-xs font-medium text-text-secondary cursor-pointer">
               Metronome Sound
+            </label>
+          </div>
+          <div className="flex items-center justify-end">
+            <input
+              id="voice-toggle"
+              type="checkbox"
+              checked={voiceEnabled}
+              onChange={(e) => setVoiceEnabled(e.target.checked)}
+              className="w-4 h-4 text-primary bg-gray-700 border-gray-600 rounded focus:ring-primary focus:ring-2 cursor-pointer"
+            />
+            <label htmlFor="voice-toggle" className="ml-2 text-xs font-medium text-text-secondary cursor-pointer">
+              Count Voice
             </label>
           </div>
         </div>
