@@ -4,12 +4,12 @@ const BEATS_PER_MEASURE = 4;
 
 interface UseMetronomeSoundsOptions {
   enabled: boolean;
+  voiceEnabled: boolean;
   bpm: number;
 }
 
-export function useMetronomeSounds({ enabled, bpm }: UseMetronomeSoundsOptions) {
+export function useMetronomeSounds({ enabled, voiceEnabled, bpm }: UseMetronomeSoundsOptions) {
   const audioContextRef = useRef<AudioContext | null>(null);
-  const measureCountRef = useRef(0);
   const synthUtteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   // Initialize audio context
@@ -51,41 +51,39 @@ export function useMetronomeSounds({ enabled, bpm }: UseMetronomeSoundsOptions) 
     oscillator.stop(now + 0.05);
   }, [enabled]);
 
-  // Speak measure count
-  const speakMeasure = useCallback((measureNumber: number) => {
-    if (!enabled || !window.speechSynthesis) return;
+  // Speak beat number (1-4)
+  const speakBeat = useCallback((beatNumber: number) => {
+    if (!voiceEnabled || !window.speechSynthesis) return;
 
     // Cancel any ongoing speech
     window.speechSynthesis.cancel();
 
-    const utterance = new SpeechSynthesisUtterance(measureNumber.toString());
+    const utterance = new SpeechSynthesisUtterance(beatNumber.toString());
     utterance.rate = Math.min(2.5, 1 + (bpm / 200)); // Faster speech for faster tempos
     utterance.pitch = 1.2;
     utterance.volume = 0.6;
 
     synthUtteranceRef.current = utterance;
     window.speechSynthesis.speak(utterance);
-  }, [enabled, bpm]);
+  }, [voiceEnabled, bpm]);
 
   // Main function to play sound for a beat
   const playBeat = useCallback((beat: number) => {
-    if (!enabled) return;
-
     const isDownbeat = beat === 1;
 
     // Play tock sound
-    playTock(isDownbeat);
-
-    // Count measures on the downbeat
-    if (isDownbeat) {
-      measureCountRef.current += 1;
-      speakMeasure(measureCountRef.current);
+    if (enabled) {
+      playTock(isDownbeat);
     }
-  }, [enabled, playTock, speakMeasure]);
 
-  // Reset measure count
+    // Speak beat number (1, 2, 3, 4)
+    if (voiceEnabled) {
+      speakBeat(beat);
+    }
+  }, [enabled, voiceEnabled, playTock, speakBeat]);
+
+  // Reset and cancel any ongoing speech
   const reset = useCallback(() => {
-    measureCountRef.current = 0;
     if (window.speechSynthesis) {
       window.speechSynthesis.cancel();
     }
