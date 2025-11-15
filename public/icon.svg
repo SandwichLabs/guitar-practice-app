@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <rect width="512" height="512" fill="#0ea5e9"/>
+  <g transform="translate(256, 256)">
+    <!-- Guitar body -->
+    <ellipse cx="0" cy="40" rx="80" ry="90" fill="#1f2937" stroke="#f9fafb" stroke-width="6"/>
+    <ellipse cx="0" cy="40" rx="60" ry="70" fill="#0ea5e9"/>
+    <circle cx="0" cy="40" r="25" fill="#1f2937"/>
+
+    <!-- Guitar neck -->
+    <rect x="-20" y="-180" width="40" height="200" fill="#9ca3af" rx="4"/>
+    <rect x="-15" y="-180" width="30" height="200" fill="#1f2937" rx="3"/>
+
+    <!-- Frets -->
+    <line x1="-20" y1="-150" x2="20" y2="-150" stroke="#f9fafb" stroke-width="2"/>
+    <line x1="-20" y1="-120" x2="20" y2="-120" stroke="#f9fafb" stroke-width="2"/>
+    <line x1="-20" y1="-90" x2="20" y2="-90" stroke="#f9fafb" stroke-width="2"/>
+    <line x1="-20" y1="-60" x2="20" y2="-60" stroke="#f9fafb" stroke-width="2"/>
+    <line x1="-20" y1="-30" x2="20" y2="-30" stroke="#f9fafb" stroke-width="2"/>
+
+    <!-- Strings -->
+    <line x1="-12" y1="-180" x2="-12" y2="20" stroke="#f9fafb" stroke-width="1.5" opacity="0.8"/>
+    <line x1="-4" y1="-180" x2="-4" y2="20" stroke="#f9fafb" stroke-width="1.5" opacity="0.8"/>
+    <line x1="4" y1="-180" x2="4" y2="20" stroke="#f9fafb" stroke-width="1.5" opacity="0.8"/>
+    <line x1="12" y1="-180" x2="12" y2="20" stroke="#f9fafb" stroke-width="1.5" opacity="0.8"/>
+
+    <!-- Headstock -->
+    <path d="M -20 -180 L -25 -200 L -25 -220 L 25 -220 L 25 -200 L 20 -180 Z" fill="#9ca3af"/>
+    <path d="M -18 -180 L -22 -200 L -22 -218 L 22 -218 L 22 -200 L 18 -180 Z" fill="#1f2937"/>
+  </g>
+</svg>
