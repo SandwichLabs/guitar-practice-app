@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { useMetronome } from '../hooks/useMetronome';
+import { useMetronomeSounds } from '../hooks/useMetronomeSounds';
 import ChordDiagram from './ChordDiagram';
 import { PlayIcon, PauseIcon, StopIcon } from './icons';
 import type { SongSection } from '../types';
@@ -23,6 +24,10 @@ const Player: React.FC<PlayerProps> = ({ bpm, sections, onBack, repeat }) => {
     sectionIndex: 0,
     chordIndex: 0,
     repetition: 1,
+  });
+  const [metronomeEnabled, setMetronomeEnabled] = useState<boolean>(() => {
+    const stored = localStorage.getItem('guitarPracticeApp_metronomeEnabled');
+    return stored ? JSON.parse(stored) : true;
   });
   const isFirstBeatRef = useRef(true);
 
@@ -64,10 +69,23 @@ const Player: React.FC<PlayerProps> = ({ bpm, sections, onBack, repeat }) => {
       return { sectionIndex, chordIndex, repetition };
     });
   }, [sections, repeat]);
-  
+
   const { isPlaying, start, stop } = useMetronome(bpm, onBeatCallback);
+  const { playBeat, reset: resetSounds } = useMetronomeSounds({ enabled: metronomeEnabled, bpm });
   
   const isSongFinished = playerState.sectionIndex >= sections.length;
+
+  // Play metronome sound on beat change
+  useEffect(() => {
+    if (beat > 0 && isPlaying) {
+      playBeat(beat);
+    }
+  }, [beat, isPlaying, playBeat]);
+
+  // Save metronome preference to localStorage
+  useEffect(() => {
+    localStorage.setItem('guitarPracticeApp_metronomeEnabled', JSON.stringify(metronomeEnabled));
+  }, [metronomeEnabled]);
 
   useEffect(() => {
     if (isSongFinished && isPlaying) {
@@ -87,6 +105,7 @@ const Player: React.FC<PlayerProps> = ({ bpm, sections, onBack, repeat }) => {
 
   const handleStop = () => {
     stop();
+    resetSounds();
     setPlayerState({ sectionIndex: 0, chordIndex: 0, repetition: 1 });
     isFirstBeatRef.current = true;
     setBeat(0);
@@ -120,10 +139,24 @@ const Player: React.FC<PlayerProps> = ({ bpm, sections, onBack, repeat }) => {
 
   return (
     <div className="flex flex-col items-center text-center">
-      
+
       <div className="relative w-full mb-2">
         <button onClick={onBack} className="absolute top-0 left-0 text-text-secondary hover:text-primary transition-colors">&larr; Back to Setup</button>
-        <div className="text-right text-sm text-text-secondary">BPM: {bpm}</div>
+        <div className="text-right">
+          <div className="text-sm text-text-secondary mb-2">BPM: {bpm}</div>
+          <div className="flex items-center justify-end">
+            <input
+              id="metronome-toggle"
+              type="checkbox"
+              checked={metronomeEnabled}
+              onChange={(e) => setMetronomeEnabled(e.target.checked)}
+              className="w-4 h-4 text-primary bg-gray-700 border-gray-600 rounded focus:ring-primary focus:ring-2 cursor-pointer"
+            />
+            <label htmlFor="metronome-toggle" className="ml-2 text-xs font-medium text-text-secondary cursor-pointer">
+              Metronome Sound
+            </label>
+          </div>
+        </div>
       </div>
       
       <div className="h-8 mb-2">
